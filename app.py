@@ -98,10 +98,9 @@ FOOTER = 'จัดทำโดย นายทินภัทร ช้อย�
 def page_home():
     st.markdown('''
     <div style="background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 60%,#a855f7 100%);
-                padding:2rem 2.4rem;border-radius:1.2rem;margin-bottom:1.4rem;
+                padding:1.7rem 2.4rem;border-radius:1.2rem;margin-bottom:1.4rem;
                 box-shadow:0 8px 24px rgba(99,102,241,.35)">
       <h1 style="margin:0;color:#fff">🎓 ระบบทำนายโอกาสสอบผ่านของนักศึกษา</h1>
-      <p style="margin:.5rem 0 0;color:#e0e7ff">มินิโปรเจค | Student Performance Prediction | ข้อมูล 1,500 รายการ</p>
     </div>''', unsafe_allow_html=True)
 
     th_feat = {'Study_Hours':'ชั่วโมงอ่านหนังสือ','Sleep_Hours':'ชั่วโมงนอน','Absences':'การขาดเรียน',
