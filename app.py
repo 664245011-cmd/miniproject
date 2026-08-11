@@ -167,15 +167,24 @@ if menu == '🏠 หน้าหลัก':
 
 # ================= หน้าผู้พัฒนา =================
 else:
-    st.title('👩‍💻 ผู้พัฒนา')
+    st.title('👨‍💻 ผู้พัฒนา')
     st.caption('ทีมงานมินิโปรเจควิชา Machine Learning')
 
     with st.container(border=True):
         c1, c2 = st.columns([1, 3])
         with c1:
-            st.markdown('<div style="font-size:70px; text-align:center">🧑‍💻</div>', unsafe_allow_html=True)
+            # ✏️ ตรงนี้ให้เปลี่ยนเป็นลิงก์รูปจริงของคุณ (เช่นจาก imgbb หรือ imgur)
+            photo_url = 'https://drive.google.com/file/d/1VHoUraXA_sfFoSOcl53_ZoGnhUEB_qJf/view?usp=sharing' 
+            
+            st.markdown(f'''
+            <div style="text-align:center; padding-top: 10px;">
+              <img src="{photo_url}"
+                   style="width:140px; height:140px; border-radius:50%; object-fit:cover;
+                          border:3px solid #6366f1; box-shadow:0 0 18px rgba(99,102,241,.45)">
+            </div>''', unsafe_allow_html=True)
+            
         with c2:
-            st.markdown('### นายทินภัทร ช้อยสามนาค')          # ✏️ แก้เป็นชื่อคุณ
+            st.markdown('### นายทินภัทร ช้อยสามนาค')
             st.markdown('**รหัสนักศึกษา:** 664245011  \n'
                         '**สาขาวิชา:** วิทยาการคอมพิวเตอร์  \n'
                         '**คณะ/ชั้นปี:** คณะวิทยาศาสตร์และเทคโนโลยี / ปีที่ 4')
@@ -183,8 +192,7 @@ else:
     with st.container(border=True):
         st.markdown('### 📮 ช่องทางติดต่อ')
         st.markdown('**อีเมล:** 664245011@webmail.npru.ac.th  \n'
-                    '**GitHub:** https://github.com/664245011-cmd?tab=repositories  \n'
-                    )
+                    '**GitHub:** [664245011-cmd (คลิกเพื่อดู Repositories)](https://github.com/664245011-cmd?tab=repositories)')
 
     with st.container(border=True):
         st.markdown('### 🛠️ เทคโนโลยีที่ใช้')
