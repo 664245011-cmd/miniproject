@@ -182,9 +182,9 @@ else:
 
     with st.container(border=True):
         st.markdown('### 📮 ช่องทางติดต่อ')
-        st.markdown('**อีเมล:** your@email.com  \n'
-                    '**GitHub:** github.com/yourname  \n'
-                    '**Line:** @yourline')
+        st.markdown('**อีเมล:** 664245011@webmail.npru.ac.th  \n'
+                    '**GitHub:** https://github.com/664245011-cmd?tab=repositories  \n'
+                    )
 
     with st.container(border=True):
         st.markdown('### 🛠️ เทคโนโลยีที่ใช้')
