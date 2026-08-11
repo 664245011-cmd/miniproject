@@ -97,11 +97,7 @@ if menu == '🏠 หน้าหลัก':
     st.title('🎓 ระบบทำนายโอกาสสอบผ่านของนักศึกษา')
     st.caption('มินิโปรเจค | Student Performance Prediction | ข้อมูล 1,500 รายการ')
 
-    m1, m2, m3, m4 = st.columns(4)
-    m1.metric('จำนวนข้อมูล', f'{len(df):,} แถว')
-    m2.metric('อัตราสอบผ่าน', f"{df['Passed'].mean():.1%}")
-    m3.metric('จำนวนฟีเจอร์', f'{len(NUM)+len(CAT)} ตัว')
-    m4.metric('โมเดลที่ดีที่สุด', best_name)
+  
 
     tab1, tab2, tab3 = st.tabs(['🔮 ทำนายผล', '📊 ภาพรวมข้อมูล', '📈 ประสิทธิภาพโมเดล'])
 
@@ -127,7 +123,7 @@ if menu == '🏠 หน้าหลัก':
             d = st.session_state['pred_input']
 
             st.divider()
-            st.subheader('📋 ทวนข้อมูลที่คุณกรอก')
+            st.subheader('📋 ข้อมูลที่คุณกรอก')
             r1, r2, r3, r4 = st.columns(4)
             r1.metric('อ่านหนังสือ', f"{d['study']:.1f} ชม./วัน")
             r2.metric('นอนหลับ', f"{d['sleep']:.1f} ชม./วัน")
