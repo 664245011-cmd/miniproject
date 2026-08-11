@@ -16,7 +16,6 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 st.set_page_config(page_title='Student Pass Predictor', page_icon='🎓',
                    layout='wide', initial_sidebar_state='expanded')
 
-# ---------- ธีมกราฟให้เข้าพื้นหลังมืด ----------
 sns.set_theme(style='whitegrid')
 plt.rcParams.update({
     'figure.facecolor': '#0e1117', 'axes.facecolor': '#1f2430',
@@ -26,34 +25,11 @@ plt.rcParams.update({
     'ytick.color': '#9ca3af', 'legend.labelcolor': '#e5e7eb'})
 PURPLE = ['#6366f1', '#8b5cf6', '#a78bfa', '#c4b5fd']
 
-# ---------- CSS ตกแต่ง ----------
 st.markdown("""
 <style>
 #MainMenu, footer, header {visibility: hidden;}
-[data-testid="stSidebar"] .stRadio > div {gap: .4rem;}
-[data-testid="stSidebar"] .stRadio label {
-    border: 1px solid transparent; border-radius: .8rem;
-    padding: .55rem 1rem; cursor: pointer; width: 100%;}
-[data-testid="stSidebar"] .stRadio label:hover {background: rgba(99,102,241,.15);}
-[data-testid="stSidebar"] .stRadio label:has(input:checked) {
-    background: linear-gradient(90deg, rgba(99,102,241,.35), rgba(99,102,241,.08));
-    border-color: #6366f1;}
-[data-testid="stSidebar"] input[type="radio"] {display: none !important;}
 </style>
 """, unsafe_allow_html=True)
-
-with st.sidebar:
-    st.markdown('##### ML HUB NAVIGATION')
-    st.divider()
-    menu = st.radio('เลือกเมนู', ['🏠 หน้าหลัก', '👨‍ ผู้พัฒนา'], label_visibility='collapsed')
-    st.divider()
-    st.caption('ระบบทำนายโอกาสสอบผ่านของนักศึกษา')
-    with st.container(border=True):
-        st.markdown('**📌 เกี่ยวกับโปรเจค**')
-        st.markdown('เปรียบเทียบโมเดล Machine Learning 3 ชนิด เพื่อทำนายโอกาสสอบผ่านจากพฤติกรรม'
-                    'การเรียน 8 ด้าน แล้วเลือกโมเดลที่แม่นยำที่สุดมาให้บริการ')
-        st.markdown('**🎯 วิธีใช้งาน**')
-        st.markdown('1. เปิดแท็บ **🔮 ทำนายผล**  \n2. เลื่อนแถบกรอกข้อมูลของคุณ  \n3. กดปุ่มทำนายเพื่อดูผลและคำแนะนำ')
 
 NUM = ['Study_Hours','Sleep_Hours','Absences','Attendance_Pct','Quiz_Score','Assignments','GPA_Prev']
 CAT = ['Part_Time_Job']
@@ -116,8 +92,10 @@ def stat_card(icon, label, value):
       <div style="color:#fff;font-size:1.05rem;font-weight:600">{value}</div></div>
     </div>'''
 
+FOOTER = 'จัดทำโดย นายทินภัทร ช้อยสามนาค (664245011) | มินิโปรเจควิชา Machine Learning'
+
 # ================= หน้าหลัก =================
-if menu == '🏠 หน้าหลัก':
+def page_home():
     st.markdown('''
     <div style="background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 60%,#a855f7 100%);
                 padding:2rem 2.4rem;border-radius:1.2rem;margin-bottom:1.4rem;
@@ -256,8 +234,11 @@ if menu == '🏠 หน้าหลัก':
         ax.set_title('Feature Importance (Random Forest)')
         st.pyplot(fig)
 
+    st.divider()
+    st.caption(FOOTER)
+
 # ================= หน้าผู้พัฒนา =================
-else:
+def page_dev():
     st.title('👨‍ ผู้พัฒนา')
     st.caption('ทีมงานมินิโปรเจควิชา Machine Learning')
     with st.container(border=True):
@@ -282,6 +263,23 @@ else:
     with st.container(border=True):
         st.markdown('### 🛠️ เทคโนโลยีที่ใช้')
         st.write('Python • Pandas • Scikit-learn • Matplotlib • Streamlit')
+    st.divider()
+    st.caption(FOOTER)
 
-st.divider()
-st.caption('จัดทำโดย นายทินภัทร ช้อยสามนาค (664245011) | มินิโปรเจควิชา Machine Learning')
+# ================= เมนูซ้ายแบบมืออาชีพ =================
+pg = st.navigation({'ML HUB NAVIGATION': [
+    st.Page(page_home, title='หน้าหลัก', icon='🏠', default=True),
+    st.Page(page_dev,  title='ผู้พัฒนา', icon='👨‍💻'),
+]})
+
+with st.sidebar:
+    st.divider()
+    st.caption('ระบบทำนายโอกาสสอบผ่านของนักศึกษา')
+    with st.container(border=True):
+        st.markdown('**📌 เกี่ยวกับโปรเจค**')
+        st.markdown('เปรียบเทียบโมเดล Machine Learning 3 ชนิด เพื่อทำนายโอกาสสอบผ่านจากพฤติกรรม'
+                    'การเรียน 8 ด้าน แล้วเลือกโมเดลที่แม่นยำที่สุดมาให้บริการ')
+        st.markdown('**🎯 วิธีใช้งาน**')
+        st.markdown('1. เปิดแท็บ **🔮 ทำนายผล**  \n2. เลื่อนแถบกรอกข้อมูลของคุณ  \n3. กดปุ่มทำนายเพื่อดูผลและคำแนะนำ')
+
+pg.run()
