@@ -30,7 +30,7 @@ st.markdown("""
     background: linear-gradient(90deg, rgba(99,102,241,.35), rgba(99,102,241,.08));
     border-color: #6366f1;
 }
-[data-testid="stSidebar"] .stRadio input {display: none;}
+[data-testid="stSidebar"] input[type="radio"] {display: none !important;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -40,6 +40,14 @@ with st.sidebar:
     menu = st.radio('เลือกเมนู', ['🏠 หน้าหลัก', '👨‍ ผู้พัฒนา'], label_visibility='collapsed')
     st.divider()
     st.caption('ระบบทำนายโอกาสสอบผ่านของนักศึกษา')
+
+    # ── เกี่ยวกับโปรเจค + วิธีใช้งาน (ย้ายมาอยู่ล่างเมนูซ้าย) ──
+    with st.container(border=True):
+        st.markdown('**📌 เกี่ยวกับโปรเจค**')
+        st.markdown('เปรียบเทียบโมเดล Machine Learning 3 ชนิด เพื่อทำนายโอกาสสอบผ่านจากพฤติกรรม'
+                    'การเรียน 8 ด้าน แล้วเลือกโมเดลที่แม่นยำที่สุดมาให้บริการ')
+        st.markdown('**🎯 วิธีใช้งาน**')
+        st.markdown('1. เปิดแท็บ **🔮 ทำนายผล**  \n2. เลื่อนแถบกรอกข้อมูลของคุณ  \n3. กดปุ่มทำนายเพื่อดูผลและคำแนะนำ')
 
 NUM = ['Study_Hours','Sleep_Hours','Absences','Attendance_Pct','Quiz_Score','Assignments','GPA_Prev']
 CAT = ['Part_Time_Job']
@@ -106,18 +114,6 @@ if menu == '🏠 หน้าหลัก':
     s2.markdown(f"**🎯 ความแม่นยำ:** {res_df.loc[best_name, 'Accuracy']:.1%}")
     s3.markdown(f"**🔑 ปัจจัยที่มีผลที่สุด:** {th_feat.get(fi.iloc[0]['feature'], fi.iloc[0]['feature'])}")
     st.divider()
-
-    # ── เกี่ยวกับโปรเจค + วิธีใช้งาน ──
-    with st.container(border=True):
-        a1, a2 = st.columns([2, 1])
-        with a1:
-            st.markdown('**📌 เกี่ยวกับโปรเจค**')
-            st.markdown('เปรียบเทียบโมเดล Machine Learning 3 ชนิด (Logistic Regression, Decision Tree, '
-                        'Random Forest) เพื่อทำนายโอกาสสอบผ่านจากพฤติกรรมการเรียน 8 ด้าน '
-                        'แล้วเลือกโมเดลที่แม่นยำที่สุดมาให้บริการทำนายผล')
-        with a2:
-            st.markdown('**🎯 วิธีใช้งาน**')
-            st.markdown('1. เปิดแท็บ **🔮 ทำนายผล**\n2. เลื่อนแถบกรอกข้อมูลของคุณ\n3. กดปุ่มทำนายเพื่อดูโอกาสและคำแนะนำ')
 
     tab1, tab2, tab3 = st.tabs(['🔮 ทำนายผล', '📊 ภาพรวมข้อมูล', '📈 ประสิทธิภาพโมเดล'])
 
