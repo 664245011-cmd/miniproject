@@ -82,4 +82,4 @@ if st.button('🔮 ทำนายผล', type='primary'):
 if os.path.exists('results.png'):
     st.markdown('---')
     st.subheader('📊 ประสิทธิภาพโมเดล')
-    st.image('results.png', use_column_width=True)
+    st.image('results.png', width='stretch')
