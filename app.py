@@ -266,20 +266,30 @@ def page_dev():
     st.divider()
     st.caption(FOOTER)
 
-# ================= เมนูซ้ายแบบมืออาชีพ =================
-pg = st.navigation({'ML HUB NAVIGATION': [
+# ================= เมนูซ้ายแบบอ่านง่าย สบายตา =================
+with st.sidebar:
+    st.markdown('''
+    <div style="text-align:center;padding:.3rem 0 1.2rem">
+      <div style="font-size:2.6rem">🎓</div>
+      <div style="font-size:1.05rem;font-weight:700;color:#ffffff">Student Pass ML</div>
+      <div style="font-size:.72rem;color:#9ca3af">ระบบทำนายโอกาสสอบผ่านของนักศึกษา</div>
+    </div>''', unsafe_allow_html=True)
+
+pg = st.navigation({'ML HUB': [
     st.Page(page_home, title='หน้าหลัก', icon='🏠', default=True),
     st.Page(page_dev,  title='ผู้พัฒนา', icon='👨‍💻'),
 ]})
 
 with st.sidebar:
+    st.markdown('**📌 เกี่ยวกับโปรเจค**')
+    st.markdown('- 🤖 เปรียบเทียบ 3 โมเดล: LR / DT / RF  \n'
+                '- 📊 ข้อมูล 1,500 รายการ • 8 ฟีเจอร์  \n'
+                '- 🏆 ใช้โมเดลที่แม่นยำที่สุดทำนายผล')
+    st.markdown('**🎯 วิธีใช้งาน**')
+    st.markdown('1️⃣ เปิดแท็บ **ทำนายผล**  \n'
+                '2️⃣ กรอกข้อมูล → กดปุ่มทำนาย  \n'
+                '3️⃣ ดูวงกลม % พร้อมคำแนะนำเฉพาะคน')
     st.divider()
-    st.caption('ระบบทำนายโอกาสสอบผ่านของนักศึกษา')
-    with st.container(border=True):
-        st.markdown('**📌 เกี่ยวกับโปรเจค**')
-        st.markdown('เปรียบเทียบโมเดล Machine Learning 3 ชนิด เพื่อทำนายโอกาสสอบผ่านจากพฤติกรรม'
-                    'การเรียน 8 ด้าน แล้วเลือกโมเดลที่แม่นยำที่สุดมาให้บริการ')
-        st.markdown('**🎯 วิธีใช้งาน**')
-        st.markdown('1. เปิดแท็บ **🔮 ทำนายผล**  \n2. เลื่อนแถบกรอกข้อมูลของคุณ  \n3. กดปุ่มทำนายเพื่อดูผลและคำแนะนำ')
+    st.caption('Mini Project • Machine Learning 2026')
 
 pg.run()
