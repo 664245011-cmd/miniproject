@@ -97,7 +97,27 @@ if menu == '🏠 หน้าหลัก':
     st.title('🎓 ระบบทำนายโอกาสสอบผ่านของนักศึกษา')
     st.caption('มินิโปรเจค | Student Performance Prediction | ข้อมูล 1,500 รายการ')
 
-  
+    # ── แถบสรุปผลงานโมเดล (ค่าคำนวณจริงจากระบบ) ──
+    th_feat = {'Study_Hours':'ชั่วโมงอ่านหนังสือ','Sleep_Hours':'ชั่วโมงนอน','Absences':'การขาดเรียน',
+               'Attendance_Pct':'เปอร์เซ็นต์เข้าเรียน','Quiz_Score':'คะแนนควิซ','Assignments':'การส่งงาน',
+               'GPA_Prev':'GPA เทอมก่อน','Part_Time_Job_Yes':'ทำงานพาร์ทไทม์','Part_Time_Job_No':'ไม่ทำงานพาร์ทไทม์'}
+    s1, s2, s3 = st.columns(3)
+    s1.markdown(f'**🤖 โมเดลที่ใช้งาน:** {best_name}')
+    s2.markdown(f"**🎯 ความแม่นยำ:** {res_df.loc[best_name, 'Accuracy']:.1%}")
+    s3.markdown(f"**🔑 ปัจจัยที่มีผลที่สุด:** {th_feat.get(fi.iloc[0]['feature'], fi.iloc[0]['feature'])}")
+    st.divider()
+
+    # ── เกี่ยวกับโปรเจค + วิธีใช้งาน ──
+    with st.container(border=True):
+        a1, a2 = st.columns([2, 1])
+        with a1:
+            st.markdown('**📌 เกี่ยวกับโปรเจค**')
+            st.markdown('เปรียบเทียบโมเดล Machine Learning 3 ชนิด (Logistic Regression, Decision Tree, '
+                        'Random Forest) เพื่อทำนายโอกาสสอบผ่านจากพฤติกรรมการเรียน 8 ด้าน '
+                        'แล้วเลือกโมเดลที่แม่นยำที่สุดมาให้บริการทำนายผล')
+        with a2:
+            st.markdown('**🎯 วิธีใช้งาน**')
+            st.markdown('1. เปิดแท็บ **🔮 ทำนายผล**\n2. เลื่อนแถบกรอกข้อมูลของคุณ\n3. กดปุ่มทำนายเพื่อดูโอกาสและคำแนะนำ')
 
     tab1, tab2, tab3 = st.tabs(['🔮 ทำนายผล', '📊 ภาพรวมข้อมูล', '📈 ประสิทธิภาพโมเดล'])
 
@@ -123,7 +143,7 @@ if menu == '🏠 หน้าหลัก':
             d = st.session_state['pred_input']
 
             st.divider()
-            st.subheader('📋 ข้อมูลที่คุณกรอก')
+            st.subheader('📋 ทวนข้อมูลที่คุณกรอก')
             r1, r2, r3, r4 = st.columns(4)
             r1.metric('อ่านหนังสือ', f"{d['study']:.1f} ชม./วัน")
             r2.metric('นอนหลับ', f"{d['sleep']:.1f} ชม./วัน")
@@ -214,25 +234,3 @@ else:
     with st.container(border=True):
         st.markdown('### 🛠️ เทคโนโลยีที่ใช้')
         st.write('Python • Pandas • Scikit-learn • Matplotlib • Streamlit')
-        
-            # ── แถบสรุปผลงานโมเดล (ค่าคำนวณจริงจากระบบ) ──
-    th_feat = {'Study_Hours':'ชั่วโมงอ่านหนังสือ','Sleep_Hours':'ชั่วโมงนอน','Absences':'การขาดเรียน',
-               'Attendance_Pct':'เปอร์เซ็นต์เข้าเรียน','Quiz_Score':'คะแนนควิซ','Assignments':'การส่งงาน',
-               'GPA_Prev':'GPA เทอมก่อน','Part_Time_Job_Yes':'ทำงานพาร์ทไทม์','Part_Time_Job_No':'ไม่ทำงานพาร์ทไทม์'}
-    s1, s2, s3 = st.columns(3)
-    s1.markdown(f'**🤖 โมเดลที่ใช้งาน:** {best_name}')
-    s2.markdown(f"**🎯 ความแม่นยำ:** {res_df.loc[best_name, 'Accuracy']:.1%}")
-    s3.markdown(f"**🔑 ปัจจัยที่มีผลที่สุด:** {th_feat.get(fi.iloc[0]['feature'], fi.iloc[0]['feature'])}")
-    st.divider()
-
-    # ── เกี่ยวกับโปรเจค + วิธีใช้งาน ──
-    with st.container(border=True):
-        a1, a2 = st.columns([2, 1])
-        with a1:
-            st.markdown('**📌 เกี่ยวกับโปรเจค**')
-            st.markdown('เปรียบเทียบโมเดล Machine Learning 3 ชนิด (Logistic Regression, Decision Tree, '
-                        'Random Forest) เพื่อทำนายโอกาสสอบผ่านจากพฤติกรรมการเรียน 8 ด้าน '
-                        'แล้วเลือกโมเดลที่แม่นยำที่สุดมาให้บริการทำนายผล')
-        with a2:
-            st.markdown('**🎯 วิธีใช้งาน**')
-            st.markdown('1. เปิดแท็บ **🔮 ทำนายผล**\n2. เลื่อนแถบกรอกข้อมูลของคุณ\n3. กดปุ่มทำนายเพื่อดูโอกาสและคำแนะนำ')
