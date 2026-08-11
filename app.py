@@ -174,7 +174,7 @@ else:
         c1, c2 = st.columns([1, 3])
         with c1:
             # ✏️ ตรงนี้ให้เปลี่ยนเป็นลิงก์รูปจริงของคุณ (เช่นจาก imgbb หรือ imgur)
-            photo_url = 'https://drive.google.com/file/d/1VHoUraXA_sfFoSOcl53_ZoGnhUEB_qJf/view?usp=sharing' 
+            photo_url = 'https://ibb.co/Jjbz7Dt6' 
             
             st.markdown(f'''
             <div style="text-align:center; padding-top: 10px;">
