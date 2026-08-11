@@ -142,7 +142,7 @@ if menu == '🏠 หน้าหลัก':
             d = st.session_state['pred_input']
 
             st.divider()
-            st.subheader('📋 ทวนข้อมูลที่คุณกรอก')
+            st.subheader('📋ข้อมูลที่คุณกรอก')
             r1, r2, r3, r4 = st.columns(4)
             r1.metric('อ่านหนังสือ', f"{d['study']:.1f} ชม./วัน")
             r2.metric('นอนหลับ', f"{d['sleep']:.1f} ชม./วัน")
