@@ -37,7 +37,7 @@ st.markdown("""
 with st.sidebar:
     st.markdown('##### ML HUB NAVIGATION')
     st.divider()
-    menu = st.radio('เลือกเมนู', ['🏠 หน้าหลัก', '👩‍ ผู้พัฒนา'], label_visibility='collapsed')
+    menu = st.radio('เลือกเมนู', ['🏠 หน้าหลัก', '👨‍ ผู้พัฒนา'], label_visibility='collapsed')
     st.divider()
     st.caption('ระบบทำนายโอกาสสอบผ่านของนักศึกษา')
 
@@ -119,9 +119,33 @@ if menu == '🏠 หน้าหลัก':
         in_job   = c2[3].selectbox('ทำงานพาร์ทไทม์', ['No', 'Yes'])
 
         if st.button('🔮 ทำนายผล', type='primary'):
-            X_in = pd.DataFrame([[in_study, in_sleep, in_abs, in_att, in_quiz, in_asn, in_gpa, in_job]],
+            st.session_state['pred_input'] = {
+                'study': in_study, 'sleep': in_sleep, 'abs': in_abs, 'att': in_att,
+                'quiz': in_quiz, 'asn': in_asn, 'gpa': in_gpa, 'job': in_job}
+
+        if 'pred_input' in st.session_state:
+            d = st.session_state['pred_input']
+
+            st.divider()
+            st.subheader('📋 ทวนข้อมูลที่คุณกรอก')
+            r1, r2, r3, r4 = st.columns(4)
+            r1.metric('อ่านหนังสือ', f"{d['study']:.1f} ชม./วัน")
+            r2.metric('นอนหลับ', f"{d['sleep']:.1f} ชม./วัน")
+            r3.metric('ขาดเรียน', f"{d['abs']} ครั้ง")
+            r4.metric('เข้าเรียน', f"{d['att']:.0f}%")
+            r5, r6, r7, r8 = st.columns(4)
+            r5.metric('คะแนนควิซ', f"{d['quiz']} คะแนน")
+            r6.metric('ส่งงาน', f"{d['asn']}/10 ชิ้น")
+            r7.metric('GPA เทอมก่อน', f"{d['gpa']:.2f}")
+            r8.metric('พาร์ทไทม์', 'ทำ' if d['job'] == 'Yes' else 'ไม่ทำ')
+
+            X_in = pd.DataFrame([[d['study'], d['sleep'], d['abs'], d['att'],
+                                  d['quiz'], d['asn'], d['gpa'], d['job']]],
                                 columns=NUM + CAT)
             prob = float(model.predict_proba(X_in)[0][1])
+
+            st.divider()
+            st.subheader('🎯 ผลการทำนาย')
             st.progress(prob)
             a, b = st.columns([1, 3])
             a.metric('โอกาสสอบผ่าน', f'{prob*100:.1f}%')
@@ -173,16 +197,13 @@ else:
     with st.container(border=True):
         c1, c2 = st.columns([1, 3])
         with c1:
-            # ✏️ ตรงนี้ให้เปลี่ยนเป็นลิงก์รูปจริงของคุณ (เช่นจาก imgbb หรือ imgur)
-            photo_url = 'https://drive.google.com/thumbnail?id=1VHoUraXA_sfFoSOcl53_ZoGnhUEB_qJf&sz' 
-            
+            photo_url = 'https://drive.google.com/thumbnail?id=1VHoUraXA_sfFoSOcl53_ZoGnhUEB_qJf&sz=w1000'
             st.markdown(f'''
             <div style="text-align:center; padding-top: 10px;">
               <img src="{photo_url}"
                    style="width:140px; height:140px; border-radius:50%; object-fit:cover;
                           border:3px solid #6366f1; box-shadow:0 0 18px rgba(99,102,241,.45)">
             </div>''', unsafe_allow_html=True)
-            
         with c2:
             st.markdown('### นายทินภัทร ช้อยสามนาค')
             st.markdown('**รหัสนักศึกษา:** 664245011  \n'
