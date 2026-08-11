@@ -41,7 +41,6 @@ with st.sidebar:
     st.divider()
     st.caption('ระบบทำนายโอกาสสอบผ่านของนักศึกษา')
 
-    # ── เกี่ยวกับโปรเจค + วิธีใช้งาน (ย้ายมาอยู่ล่างเมนูซ้าย) ──
     with st.container(border=True):
         st.markdown('**📌 เกี่ยวกับโปรเจค**')
         st.markdown('เปรียบเทียบโมเดล Machine Learning 3 ชนิด เพื่อทำนายโอกาสสอบผ่านจากพฤติกรรม'
@@ -96,16 +95,16 @@ def build_all():
     rf = pipes['Random Forest']
     names = list(NUM) + list(rf.named_steps['pre'].named_transformers_['cat'].named_steps['ohe'].get_feature_names_out(CAT))
     fi = pd.DataFrame({'feature': names, 'importance': rf.named_steps['model'].feature_importances_}).sort_values('importance', ascending=False)
-    return df, pipes[best], best, res_df, cm, fi
+    return df, pipes, best, res_df, cm, fi
 
-df, model, best_name, res_df, cm, fi = build_all()
+df, pipes, best_name, res_df, cm, fi = build_all()
+base_rate = df['Passed'].mean()
 
 # ================= หน้าหลัก =================
 if menu == '🏠 หน้าหลัก':
     st.title('🎓 ระบบทำนายโอกาสสอบผ่านของนักศึกษา')
     st.caption('มินิโปรเจค | Student Performance Prediction | ข้อมูล 1,500 รายการ')
 
-    # ── แถบสรุปผลงานโมเดล (ค่าคำนวณจริงจากระบบ) ──
     th_feat = {'Study_Hours':'ชั่วโมงอ่านหนังสือ','Sleep_Hours':'ชั่วโมงนอน','Absences':'การขาดเรียน',
                'Attendance_Pct':'เปอร์เซ็นต์เข้าเรียน','Quiz_Score':'คะแนนควิซ','Assignments':'การส่งงาน',
                'GPA_Prev':'GPA เทอมก่อน','Part_Time_Job_Yes':'ทำงานพาร์ทไทม์','Part_Time_Job_No':'ไม่ทำงานพาร์ทไทม์'}
@@ -129,11 +128,15 @@ if menu == '🏠 หน้าหลัก':
         in_asn   = c2[1].slider('จำนวนงานที่ส่ง (จาก 10)', 0, 10, 7)
         in_gpa   = c2[2].slider('GPA เทอมก่อน', 0.0, 4.0, 2.5, 0.1)
         in_job   = c2[3].selectbox('ทำงานพาร์ทไทม์', ['No', 'Yes'])
+        in_model = st.selectbox('🤖 เลือกโมเดลที่ใช้ทำนาย', list(pipes.keys()),
+                                index=list(pipes.keys()).index(best_name),
+                                help='ค่าเริ่มต้นคือโมเดลที่แม่นยำที่สุด — ลองสลับโมเดลแล้วเปรียบเทียบผลดูได้')
 
         if st.button('🔮 ทำนายผล', type='primary'):
             st.session_state['pred_input'] = {
                 'study': in_study, 'sleep': in_sleep, 'abs': in_abs, 'att': in_att,
-                'quiz': in_quiz, 'asn': in_asn, 'gpa': in_gpa, 'job': in_job}
+                'quiz': in_quiz, 'asn': in_asn, 'gpa': in_gpa, 'job': in_job,
+                'model': in_model}
 
         if 'pred_input' in st.session_state:
             d = st.session_state['pred_input']
@@ -154,18 +157,33 @@ if menu == '🏠 หน้าหลัก':
             X_in = pd.DataFrame([[d['study'], d['sleep'], d['abs'], d['att'],
                                   d['quiz'], d['asn'], d['gpa'], d['job']]],
                                 columns=NUM + CAT)
-            prob = float(model.predict_proba(X_in)[0][1])
+            prob = float(pipes[d['model']].predict_proba(X_in)[0][1])
 
             st.divider()
-            st.subheader('🎯 ผลการทำนาย')
+            st.subheader(f"🎯 ผลการทำนาย (โมเดล: {d['model']})")
             st.progress(prob)
             a, b = st.columns([1, 3])
-            a.metric('โอกาสสอบผ่าน', f'{prob*100:.1f}%')
+            a.metric('โอกาสสอบผ่าน', f'{prob*100:.1f}%', delta=f'{(prob-base_rate)*100:+.1f}%')
             if prob >= 0.7:   b.success('✅ แนวโน้มดี รักษาวิถีนี้ไว้!')
             elif prob >= 0.4: b.warning('⚠️ เริ่มเสี่ยง ลองเพิ่มชั่วโมงทบทวนบทเรียนอีกนิด')
             else:             b.error('🚨 เสี่ยงสูง! ควรปรึกษาอาจารย์และปรับแผนการเรียนด่วน')
 
+            advice = []
+            if d['study'] < 2:  advice.append('เพิ่มชั่วโมงอ่านหนังสือเป็นอย่างน้อย 2 ชม./วัน')
+            if d['sleep'] < 6:  advice.append('นอนให้พอ 6–8 ชม. เพื่อความจำและสมาธิที่ดีขึ้น')
+            if d['abs'] > 5:    advice.append('ลดการขาดเรียน ไม่ควรเกิน 2–3 ครั้งต่อเทอม')
+            if d['att'] < 70:   advice.append('เข้าเรียนให้สม่ำเสมอมากขึ้น (เป้าหมาย > 80%)')
+            if d['quiz'] < 50:  advice.append('ทบทวนบทเรียนเพิ่มเติมก่อนสอบควิซครั้งถัดไป')
+            if d['asn'] < 6:    advice.append('ส่งงานที่ค้างให้ครบทุกชิ้น')
+            if d['job'] == 'Yes' and prob < 0.5: advice.append('จัดสมดุลเวลาทำงานพาร์ทไทม์กับเวลาเรียนใหม่')
+            if not advice:      advice.append('พฤติกรรมการเรียนดีทุกด้าน รักษามาตรฐานนี้ไว้!')
+            st.markdown('**💡 คำแนะนำเฉพาะบุคคล:**')
+            for adv in advice:
+                st.markdown(f'- {adv}')
+
     with tab2:
+        st.download_button('⬇️ ดาวน์โหลดชุดข้อมูล (CSV)', df.to_csv(index=False).encode('utf-8-sig'),
+                           file_name='student_performance.csv', mime='text/csv')
         st.dataframe(df.head(100))
         i1, i2 = st.columns(2)
         with i1:
@@ -203,7 +221,7 @@ if menu == '🏠 หน้าหลัก':
 
 # ================= หน้าผู้พัฒนา =================
 else:
-    st.title('👨‍💻 ผู้พัฒนา')
+    st.title('👨‍ ผู้พัฒนา')
     st.caption('ทีมงานมินิโปรเจควิชา Machine Learning')
 
     with st.container(border=True):
@@ -230,3 +248,6 @@ else:
     with st.container(border=True):
         st.markdown('### 🛠️ เทคโนโลยีที่ใช้')
         st.write('Python • Pandas • Scikit-learn • Matplotlib • Streamlit')
+
+st.divider()
+st.caption('จัดทำโดย นายทินภัทร ช้อยสามนาค (664245011) | มินิโปรเจควิชา Machine Learning')
